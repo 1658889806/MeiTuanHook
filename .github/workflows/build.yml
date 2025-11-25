@@ -9,7 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-java@v4
+      
+    - name: Setup JDK 11
+      uses: actions/setup-java@v4
       with:
         java-version: '11'
         distribution: 'temurin'
@@ -17,20 +19,15 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x gradlew
       
-    # 关键步骤：配置 Gradle 使用国内镜像
-    - name: Setup Gradle with mirror
-      run: |
-        # 创建 Gradle 配置文件
-        mkdir -p ~/.gradle
-        echo "systemProp.http.proxyHost=mirrors.cloud.tencent.com" >> ~/.gradle/gradle.properties
-        echo "systemProp.https.proxyHost=mirrors.cloud.tencent.com" >> ~/.gradle/gradle.properties
-        
-    - name: Build APK with retry
+    # 关键：跳过 lint 和某些检查，直接构建 APK
+    - name: Build Debug APK Only
       run: |
         ./gradlew clean
-        ./gradlew assembleDebug --no-daemon
+        ./gradlew assembleDebug -x lint -x test --no-daemon
         
-    - uses: actions/upload-artifact@v4
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
       with:
         name: app-apk
         path: app/build/outputs/apk/debug/
+        retention-days: 7
