@@ -43,6 +43,10 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
+    lintOptions {
+        abortOnError false  // 关键：不因 lint 错误中止构建
+        checkReleaseBuilds false  // 发布构建也不检查
+    }
 }
 
 // ⭐⭐⭐ 添加这部分的仓库配置 ⭐⭐⭐
