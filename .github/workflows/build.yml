@@ -11,9 +11,25 @@ jobs:
     - uses: actions/checkout@v4
     - uses: actions/setup-java@v4
       with:
-        java-version: '17'
-    - run: chmod +x gradlew
-    - run: ./gradlew assembleDebug
+        java-version: '11'
+        distribution: 'temurin'
+    
+    - name: Make gradlew executable
+      run: chmod +x gradlew
+      
+    # 关键步骤：配置 Gradle 使用国内镜像
+    - name: Setup Gradle with mirror
+      run: |
+        # 创建 Gradle 配置文件
+        mkdir -p ~/.gradle
+        echo "systemProp.http.proxyHost=mirrors.cloud.tencent.com" >> ~/.gradle/gradle.properties
+        echo "systemProp.https.proxyHost=mirrors.cloud.tencent.com" >> ~/.gradle/gradle.properties
+        
+    - name: Build APK with retry
+      run: |
+        ./gradlew clean
+        ./gradlew assembleDebug --no-daemon
+        
     - uses: actions/upload-artifact@v4
       with:
         name: app-apk
