@@ -19,14 +19,13 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x gradlew
       
-    # 关键：直接构建 debug APK，跳过所有检查
-    - name: Build Debug APK Only
+    # 关键：使用 assembleDebug 而不是 build
+    - name: Build APK (Skip Lint)
       run: |
         ./gradlew clean
-        ./gradlew app:assembleDebug --no-daemon --no-parallel
+        ./gradlew assembleDebug --no-daemon
         
     - name: Upload APK
-      if: always()  # 即使构建失败也尝试上传
       uses: actions/upload-artifact@v4
       with:
         name: app-apk
