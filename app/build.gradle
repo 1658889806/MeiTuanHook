@@ -45,14 +45,18 @@ android {
     }
 }
 
+// ⭐⭐⭐ 添加这部分的仓库配置 ⭐⭐⭐
 repositories {
+    google()
+    mavenCentral()
+    maven { url 'https://www.jitpack.io' }
     flatDir {
         dirs 'libs'
     }
 }
+// ⭐⭐⭐ 添加结束 ⭐⭐⭐
 
 dependencies {
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.2.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -64,6 +68,6 @@ dependencies {
     //
     implementation project(path: ':openCVLibrary343')
     //
-    //mmkv
-    implementation 'com.tencent:mmkv:1.0.23'
+    //mmkv - 同时更新到可用版本
+    implementation 'com.tencent:mmkv:1.2.14'  // ⭐ 更新版本 ⭐
 }
